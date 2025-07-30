@@ -128,7 +128,7 @@ export default function TreasureHuntApp() {
           <div className="text-8xl mb-4">🎉</div>
           <h1 className="text-4xl font-bold text-green-600 mb-4">SUCCESS!</h1>
           <p className="text-xl text-gray-700 mb-6">
-            You cracked the code! Your treasure is waiting in the {correctAnswer}! 🚗
+            You cracked the code! Your present is waiting in the {correctAnswer}! 🚗
           </p>
           <div className="text-6xl mb-4">🎁</div>
           <p className="text-lg text-purple-600 font-semibold mb-6">
@@ -159,7 +159,7 @@ export default function TreasureHuntApp() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-5xl font-bold text-white mb-2">🕵️‍♀️ SECRET AGENT CODE! 🕵️‍♂️</h1>
-          <p className="text-xl text-white">Crack the code to find your birthday treasure!</p>
+          <p className="text-xl text-white">Crack the code to find your birthday present!</p>
           {puzzleCompleted && (
             <div className="mt-4 p-3 bg-green-100 rounded-xl border-2 border-green-300 inline-block">
               <p className="text-green-800 font-semibold">✅ Puzzle Complete! Now solve the secret code!</p>
