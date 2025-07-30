@@ -245,10 +245,11 @@ const JigsawPuzzle = ({ imageUrl, onComplete, onReset }) => {
         
         {/* Left side: Puzzle pieces area OR completion message */}
         <div>
+          <h4 className="text-lg font-bold text-center text-gray-700 mb-3">Puzzle Pieces</h4>
           {isComplete ? (
             // Completion message replaces puzzle pieces area
             <div className="bg-green-50 border-4 border-green-300 rounded-lg p-4 flex items-center justify-center" style={{ 
-              width: PIECES_AREA_WIDTH,
+              width: GRID_SIZE * PIECE_SIZE + 100,
               height: PIECES_AREA_HEIGHT
             }}>
               <div className="text-center w-full">
@@ -275,15 +276,13 @@ const JigsawPuzzle = ({ imageUrl, onComplete, onReset }) => {
             </div>
           ) : (
             // Normal puzzle pieces area
-            <>
-              <h4 className="text-lg font-bold text-center text-gray-700 mb-3">Puzzle Pieces</h4>
-              <div 
-                className="relative bg-blue-50 border-4 border-blue-300 rounded-lg"
-                style={{ 
-                  width: PIECES_AREA_WIDTH,
-                  height: PIECES_AREA_HEIGHT
-                }}
-              >
+            <div 
+              className="relative bg-blue-50 border-4 border-blue-300 rounded-lg"
+              style={{ 
+                width: GRID_SIZE * PIECE_SIZE + 100,
+                height: PIECES_AREA_HEIGHT
+              }}
+            >
                 {/* Unplaced pieces */}
                 {pieces.filter(piece => !piece.isPlaced).map((piece) => (
                   <div
@@ -308,7 +307,6 @@ const JigsawPuzzle = ({ imageUrl, onComplete, onReset }) => {
                   />
                 ))}
               </div>
-            </>
           )}
         </div>
 
