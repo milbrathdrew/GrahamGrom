@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
+import JigsawPuzzle from './components/JigsawPuzzle';
 
 export default function TreasureHuntApp() {
   const [userInput, setUserInput] = useState('');
@@ -8,6 +9,8 @@ export default function TreasureHuntApp() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [puzzleCompleted, setPuzzleCompleted] = useState(false);
   const [currentPage, setCurrentPage] = useState('puzzle');
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [availableImages, setAvailableImages] = useState([]);
   
   const secretCode = '7-1-18-1-7-5';
   const correctAnswer = 'GARAGE';
@@ -35,6 +38,7 @@ export default function TreasureHuntApp() {
     setShowSuccess(false);
     setPuzzleCompleted(false);
     setCurrentPage('puzzle');
+    setSelectedImage(null);
   };
 
   const handlePuzzleComplete = () => {
@@ -42,50 +46,75 @@ export default function TreasureHuntApp() {
     setCurrentPage('secret-agent');
   };
 
+  // Get list of available puzzle images
+  const getAvailableImages = () => {
+    // Using puzzle1 through puzzle5 in /public/puzzle-images/ folder
+    return [
+      'puzzle1.jpg',
+      'puzzle2.jpg', 
+      'puzzle3.jpg',
+      'puzzle4.jpg',
+      'puzzle5.jpg'
+    ];
+  };
+
+  // Select random image from available images
+  const selectRandomImage = () => {
+    const images = getAvailableImages();
+    if (images.length > 0) {
+      const randomIndex = Math.floor(Math.random() * images.length);
+      const selectedImagePath = `/puzzle-images/${images[randomIndex]}`;
+      setSelectedImage(selectedImagePath);
+      return selectedImagePath;
+    }
+    return null;
+  };
+
+  // Initialize with random image on component mount
+  React.useEffect(() => {
+    const images = getAvailableImages();
+    setAvailableImages(images);
+    selectRandomImage();
+  }, []);
+
   // Puzzle Page
   if (currentPage === 'puzzle') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 p-4">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-5xl font-bold text-white mb-2">🧩 BIRTHDAY PUZZLE QUEST! 🧩</h1>
-            <p className="text-xl text-white">Complete the jigsaw puzzle to unlock your secret mission!</p>
           </div>
           
-          <div className="bg-white rounded-2xl shadow-xl p-6 text-center">
-            <h2 className="text-3xl font-bold text-purple-600 mb-4">🎯 Your First Challenge</h2>
-            <p className="text-lg text-gray-700 mb-6">
-              Solve this special birthday puzzle to reveal your next clue!
-            </p>
-            
-            <div className="bg-blue-50 rounded-xl p-6 mb-6">
-              <iframe 
-                src="https://puzzel.org/en/jigsaw/play?p=-OWRciPEskky4wRLNrZA"
-                width="100%"
-                height="500"
-                className="rounded-lg border-2 border-blue-200"
-                title="Birthday Jigsaw Puzzle"
-              />
-            </div>
-            
-            <div className="space-y-4">
-              <p className="text-lg font-semibold text-blue-700">
-                💡 Complete the puzzle above, then click "I solved it!" to continue your adventure!
-              </p>
-              
-              <button
-                onClick={handlePuzzleComplete}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-full text-xl transition-colors shadow-lg"
-              >
-                🎉 I solved it!
-              </button>
-            </div>
-            
-            <div className="mt-6 p-4 bg-yellow-100 rounded-xl border-2 border-yellow-300">
-              <p className="text-lg font-semibold text-yellow-800">
-                🕵️‍♂️ Once you complete this puzzle, your secret agent mission will begin!
-              </p>
-            </div>
+          <div className="bg-white rounded-2xl shadow-xl p-6">
+            {!selectedImage ? (
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-purple-600 mb-4">🎯 Loading Your Puzzle...</h2>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                <div className="text-center">
+
+                  
+                  <div className="mt-4 p-4 bg-yellow-100 rounded-xl border-2 border-yellow-300">
+                    <p className="text-lg font-semibold text-yellow-800">
+                      🕵️‍♂️ Once you solve the puzzle, your secret agent mission will begin!
+                    </p>
+                  </div>
+                </div>
+                
+                <JigsawPuzzle 
+                  imageUrl={selectedImage}
+                  onComplete={handlePuzzleComplete}
+                  onReset={() => {
+                    // Reset puzzle but keep the same image
+                    setPuzzleCompleted(false);
+                  }}
+                />
+
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -138,6 +167,27 @@ export default function TreasureHuntApp() {
           )}
         </div>
 
+        {/* Instructions */}
+        <div className="mb-6 bg-white rounded-2xl shadow-xl p-6">
+          <h3 className="text-xl font-bold text-center mb-3 text-indigo-600">📝 HOW TO PLAY</h3>
+          <ol className="text-lg space-y-2 text-gray-700">
+            <li><strong>1.</strong> Look at the secret code: <span className="font-mono font-bold text-red-600">{secretCode}</span></li>
+            <li><strong>2.</strong> Use the decoder to find what letter each number represents</li>
+            <li><strong>3.</strong> Put the letters together to spell a word</li>
+            <li><strong>4.</strong> Type your answer and click "Check Answer"</li>
+            <li><strong>5.</strong> Find your treasure in that special place! 🎁</li>
+          </ol>
+          
+          <div className="mt-4 text-center">
+            <button 
+              onClick={() => setCurrentPage('puzzle')}
+              className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-full text-sm transition-colors"
+            >
+              🧩 Back to Puzzle
+            </button>
+          </div>
+        </div>
+
         {/* Main Content */}
         <div className="grid md:grid-cols-2 gap-6">
           {/* Secret Code Section */}
@@ -176,7 +226,7 @@ export default function TreasureHuntApp() {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder="What word does the code spell?"
-                className="text-2xl font-bold text-center p-4 border-4 border-purple-300 rounded-xl w-full max-w-md uppercase tracking-widest"
+                className="text-2xl font-bold text-center p-4 border-4 border-purple-300 rounded-xl w-full max-w-2xl uppercase tracking-widest"
                 maxLength="10"
               />
             </div>
@@ -211,26 +261,6 @@ export default function TreasureHuntApp() {
           )}
         </div>
 
-        {/* Instructions */}
-        <div className="mt-6 bg-white rounded-2xl shadow-xl p-6">
-          <h3 className="text-xl font-bold text-center mb-3 text-indigo-600">📝 HOW TO PLAY</h3>
-          <ol className="text-lg space-y-2 text-gray-700">
-            <li><strong>1.</strong> Look at the secret code: <span className="font-mono font-bold text-red-600">{secretCode}</span></li>
-            <li><strong>2.</strong> Use the decoder to find what letter each number represents</li>
-            <li><strong>3.</strong> Put the letters together to spell a word</li>
-            <li><strong>4.</strong> Type your answer and click "Check Answer"</li>
-            <li><strong>5.</strong> Find your treasure in that special place! 🎁</li>
-          </ol>
-          
-          <div className="mt-4 text-center">
-            <button 
-              onClick={() => setCurrentPage('puzzle')}
-              className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-full text-sm transition-colors"
-            >
-              🧩 Back to Puzzle
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
