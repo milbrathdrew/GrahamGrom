@@ -12,12 +12,12 @@ const JigsawPuzzle = ({ imageUrl, onComplete, onReset }) => {
   const imageRef = useRef(null);
 
   // Puzzle configuration
-  const GRID_SIZE = 4; // 4x4 = 16 pieces
-  const PIECE_SIZE = 80; // Smaller to fit better
+  const GRID_SIZE = 2; // 2x2 = 4 pieces
+  const PIECE_SIZE = 120; // Larger pieces for easier handling
   const GRID_OFFSET = 50; // Offset of grid from container edge
-  const PIECES_AREA_WIDTH = 400;
-  const PIECES_AREA_HEIGHT = 400;
-  const PIECES_PER_ROW = 4;
+  const PIECES_AREA_WIDTH = 300;
+  const PIECES_AREA_HEIGHT = 300;
+  const PIECES_PER_ROW = 2;
 
   // Confetti component
   const Confetti = () => {
@@ -53,13 +53,13 @@ const JigsawPuzzle = ({ imageUrl, onComplete, onReset }) => {
     );
   };
 
-  // Calculate position in pieces area (4x4 grid)
+  // Calculate position in pieces area (2x2 grid for 4 pieces)
   const getPieceAreaPosition = (index) => {
-    const row = Math.floor(index / PIECES_PER_ROW); // PIECES_PER_ROW = 4
+    const row = Math.floor(index / PIECES_PER_ROW); // PIECES_PER_ROW = 2
     const col = index % PIECES_PER_ROW;
     return {
-      x: col * (PIECE_SIZE + 10) + 10, // 10px padding between pieces
-      y: row * (PIECE_SIZE + 10) + 10  // 10px padding between pieces
+      x: col * (PIECE_SIZE + 20) + 30, // More padding for easier selection
+      y: row * (PIECE_SIZE + 20) + 30  // More padding for easier selection
     };
   };
 
@@ -249,7 +249,7 @@ const JigsawPuzzle = ({ imageUrl, onComplete, onReset }) => {
           {isComplete ? (
             // Completion message replaces puzzle pieces area
             <div className="bg-green-50 border-4 border-green-300 rounded-lg p-4 flex items-center justify-center" style={{ 
-              width: GRID_SIZE * PIECE_SIZE + 100,
+              width: PIECES_AREA_WIDTH,
               height: PIECES_AREA_HEIGHT
             }}>
               <div className="text-center w-full">
@@ -279,7 +279,7 @@ const JigsawPuzzle = ({ imageUrl, onComplete, onReset }) => {
             <div 
               className="relative bg-blue-50 border-4 border-blue-300 rounded-lg"
               style={{ 
-                width: GRID_SIZE * PIECE_SIZE + 100,
+                width: PIECES_AREA_WIDTH,
                 height: PIECES_AREA_HEIGHT
               }}
             >
